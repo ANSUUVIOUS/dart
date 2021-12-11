@@ -19,7 +19,7 @@ import json
 import logging
 import time
 from calendar import timegm
-from httplib import BAD_REQUEST, NOT_ACCEPTABLE
+from http.client import BAD_REQUEST, NOT_ACCEPTABLE
 from itertools import chain
 
 from django.contrib import messages
@@ -28,7 +28,7 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.signing import Signer
-from django.core.urlresolvers import reverse, reverse_lazy, resolve
+from django.urls import reverse, reverse_lazy, resolve
 from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import redirect
@@ -200,10 +200,11 @@ class ReportMissionView(View):
 
         logger.debug('GET: ReportMissionView ({mission_id})'.format(mission_id=mission_id))
 
-        io_stream = generate_report_or_attachments(mission_id, zip_attachments=False)
+        io_stream, name = generate_report_or_attachments(mission_id, zip_attachments=False)
+        docx_name = name + "_" + str(mission_id)
 
-        response = HttpResponse(io_stream.getvalue(), content_type='text/plain')
-        response['Content-Disposition'] = 'attachment; filename={}_mission_report.docx'.format(mission_id)
+        response= HttpResponse(io_stream.getvalue(), content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename={}_mission_report.docx'.format(docx_name)
         #response['Content-Disposition'] = 'attachment; filename={}_mission_report.zip'.format(mission_id)
         return response
 
@@ -216,10 +217,11 @@ class ReportAttachmentsMissionView(View):
 
         logger.debug('GET: ReportAttachmentsMissionView ({mission_id})'.format(mission_id=mission_id))
 
-        io_stream = generate_report_or_attachments(mission_id, zip_attachments=True)
+        io_stream, name = generate_report_or_attachments(mission_id, zip_attachments=True)
+        zip_name = name + "_" + str(mission_id)
 
         response = HttpResponse(io_stream.getvalue(), content_type='application/octet-stream')
-        response['Content-Disposition'] = 'attachment; filename={}_supporting_data.zip'.format(mission_id)
+        response['Content-Disposition'] = 'attachment; filename={}_supporting_data.zip'.format(zip_name)
         return response
 
 
@@ -668,7 +670,7 @@ def mission_host_handler(request, host_id):
 
                 if host.pk is None:
                     # Hosts shouldn't be jumping between missions, so only allow mission assignment upon creation
-                    if 'mission_id' in data.keys():
+                    if 'mission_id' in list(data.keys()):
                         logger.debug('Host update POST contains a mission pk value.')
                         try:
                             host.mission = Mission.objects.get(pk=int(data['mission_id']))
@@ -906,7 +908,8 @@ class BusinessAreaListView(ListView):
 
 
 @require_http_methods(["POST", "DELETE"])
-def business_area_handler(request, pk):
+def business_area_handler(request, *args, **kwargs):
+    pk = kwargs.get('pk')
     if request.method == 'POST':
         data = json.loads(request.body)
         if pk is None:
@@ -944,7 +947,8 @@ class ClassificationListView(ListView):
 
 
 @require_http_methods(["POST", "DELETE"])
-def classification_handler(request, pk):
+def classification_handler(request, *args, **kwargs):
+    pk = kwargs.get('pk')
     if request.method == 'POST':
         data = json.loads(request.body)
         if pk is None:
@@ -1000,7 +1004,8 @@ class ColorListView(ListView):
 
 
 @require_http_methods(["POST", "DELETE"])
-def color_handler(request, pk):
+def color_handler(request,*args, **kwargs):
+    pk = kwargs.get('pk')
     if request.method == 'POST':
         data = json.loads(request.body)
         if pk is None:

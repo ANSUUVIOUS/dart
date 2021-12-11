@@ -1,4 +1,4 @@
-# Copyright 2017 Lockheed Martin Corporation
+# Copyright 2031 Lockheed Martin Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,29 @@
 # limitations under the License.
 #
 
-Django>=1.11.20,<1.12.0
-django-bootstrap3==11.0.0
+python-docx==0.8.11
+lxml==4.6.4
+Django==3.2.9
+pytz==2021.3.0
+sqlparse==0.4.2
+asgiref<4,>==3.4.1
+django-bootstrap3==21.1.0
+
+
+
+
+
+######################################################################################
+
+################################## Python 2 packages #################################
+
+######################################################################################
+#Django>=1.11.20,<1.12.0
+#django-bootstrap3==11.0.0
 # lxml 3.6.0 wheels are available in pypi, while newer versions are available in source,
 # offline windows installation is complicated because it needs the libxml2 lib to build
 # For the moment, we'll just pin to 3.6.0 so that way the prepper will download all
 # dependencies (thinking ahead to nix/docker friendliness) and pip install on Win will
 # prefer the appropriate wheel over the source version.
-lxml==3.6.0
-python-docx==0.8.6
+#lxml==3.6.0
+#python-docx==0.8.6

@@ -18,7 +18,7 @@
 import argparse
 import os
 import subprocess
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import ssl
 import socket
 import logging
@@ -49,8 +49,8 @@ class DartOfflinePrepper(object):
         self.BYPASS_CERTIFICATE_VALIDATION = kwargs.get('insecure', False)
         logger.warn('Bypassing certificate validation: {}'.format(self.BYPASS_CERTIFICATE_VALIDATION))
 
-        self.PYTHON_DOWNLOAD_URL = 'https://www.python.org/ftp/python/2.7.12/python-2.7.12.amd64.msi'
-        self.VCPYTHON27_DOWNLOAD_URL = 'https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi'
+        self.PYTHON_DOWNLOAD_URL = 'https://www.python.org/ftp/python/3.10.1/python-3.10.1-amd64.exe'
+        #self.VCPYTHON27_DOWNLOAD_URL = 'https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi'
 
         self.DOWNLOAD_TIMEOUT = 30
 
@@ -130,7 +130,7 @@ class DartOfflinePrepper(object):
         Download vcpython27 since some Windows 7 boxes have it and some don't.
         :return: None
         """
-
+        return
         self._prepare_for_download()
 
         logger.info('Beginning download of vcpython27... this may take a few minutes...')
@@ -138,14 +138,14 @@ class DartOfflinePrepper(object):
         with open(os.path.join(DOWNLOADS_DIR, 'vcpython27.msi'), 'wb') as f:
 
             if self.PROXY is not None:
-                opener = urllib2.build_opener(
-                    urllib2.HTTPHandler(),
-                    urllib2.HTTPSHandler(),
-                    urllib2.ProxyHandler({'http': self.PROXY, 'https': self.PROXY})
+                opener = urllib.request.build_opener(
+                    urllib.request.HTTPHandler(),
+                    urllib.request.HTTPSHandler(),
+                    urllib.request.ProxyHandler({'http': self.PROXY, 'https': self.PROXY})
                 )
-                urllib2.install_opener(opener)
+                urllib.request.install_opener(opener)
 
-            f.write(urllib2.urlopen(self.VCPYTHON27_DOWNLOAD_URL, timeout=self.DOWNLOAD_TIMEOUT).read())
+            f.write(urllib.request.urlopen(self.VCPYTHON27_DOWNLOAD_URL, timeout=self.DOWNLOAD_TIMEOUT).read())
 
         logger.debug('Download of vcpython27 complete')
 
@@ -162,14 +162,14 @@ class DartOfflinePrepper(object):
         with open(os.path.join(DOWNLOADS_DIR, 'python-installer.msi'), 'wb') as f:
 
             if self.PROXY is not None:
-                opener = urllib2.build_opener(
-                    urllib2.HTTPHandler(),
-                    urllib2.HTTPSHandler(),
-                    urllib2.ProxyHandler({'http': self.PROXY, 'https': self.PROXY})
+                opener = urllib.request.build_opener(
+                    urllib.request.HTTPHandler(),
+                    urllib.request.HTTPSHandler(),
+                    urllib.request.ProxyHandler({'http': self.PROXY, 'https': self.PROXY})
                 )
-                urllib2.install_opener(opener)
+                urllib.request.install_opener(opener)
 
-            f.write(urllib2.urlopen(self.PYTHON_DOWNLOAD_URL, timeout=self.DOWNLOAD_TIMEOUT).read())
+            f.write(urllib.request.urlopen(self.PYTHON_DOWNLOAD_URL, timeout=self.DOWNLOAD_TIMEOUT).read())
 
         logger.debug('Download of python complete')
 
@@ -204,7 +204,6 @@ prepper = DartOfflinePrepper(**vars(args))
 logger.info('Beginning DART offline installation preparation')
 
 if args.target == "w7" or args.target is None:
-    prepper.download_vcpython27()
     prepper.download_python()
     prepper.download_pip_requirements()
 

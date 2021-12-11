@@ -43,7 +43,7 @@ PYTHON_INTERPRETER = 'python'
 
 print('\n\nDART First Run Script\nCreated by the Lockheed Martin Red Team')
 
-raw_input("\n\nPress Enter to continue...")
+eval(input("\n\nPress Enter to continue..."))
 
 print('\nEnsuring all migrations are made...')
 subprocess.call([PYTHON_INTERPRETER, MANAGER, "makemigrations"])
@@ -57,5 +57,5 @@ subprocess.call([PYTHON_INTERPRETER, MANAGER, "loaddata", "common_classification
 print('\nRunning Fixture: common_bas')
 subprocess.call([PYTHON_INTERPRETER, MANAGER, "loaddata", "common_bas"])
 
-raw_input("Press Enter to exit...")
+eval(input("Press Enter to exit..."))
 exit(0)

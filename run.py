@@ -45,5 +45,5 @@ print('Navigate to http://<ip_address>:8000 in your browser')
 
 print('\n\nCan\'t login? ')
 print('You may need to open a new command window and create a user using the below command:\n')
-print(PYTHON_INTERPRETER + " " + MANAGER + " createsuperuser\n")
+print((PYTHON_INTERPRETER + " " + MANAGER + " createsuperuser\n"))
 subprocess.call([PYTHON_INTERPRETER, MANAGER, "runserver", "0.0.0.0:8000"])

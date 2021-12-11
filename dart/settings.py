@@ -25,7 +25,7 @@
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DART_VERSION_NUMBER = '2.1.0'
+DART_VERSION_NUMBER = '3.1.0'
 
 # SECURITY WARNING
 # We are not randomizing this key for you.
@@ -48,12 +48,22 @@ INSTALLED_APPS = (
     'missions.apps.MissionsConfig',
 )
 
-MIDDLEWARE_CLASSES = (
+# MIDDLEWARE_CLASSES = (
+#     'django.contrib.sessions.middleware.SessionMiddleware',
+#     'django.middleware.common.CommonMiddleware',
+#     'django.middleware.csrf.CsrfViewMiddleware',
+#     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+#     'django.contrib.messages.middleware.MessageMiddleware',
+#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#     #'missions.middleware.RequiredInterstitial', # Uncomment and see related setting below if you require an interstitial
+# )
+
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'missions.middleware.RequiredInterstitial', # Uncomment and see related setting below if you require an interstitial
@@ -77,6 +87,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
 				'missions.contextprocessors.context_processors.version_number',
+                'django.template.context_processors.request'
             ],
 			# SECURITY WARNING
 			# We run in debug mode so that static files are automatically served
@@ -84,6 +95,9 @@ TEMPLATES = [
 			# this on a trusted network (remember the security warning at the top of this file) you
 			# are probably okay doing the same.
 			'debug': DEBUG,
+            'libraries' : {
+                'staticfiles': 'django.templatetags.static', 
+            }
         },
     },
 ]

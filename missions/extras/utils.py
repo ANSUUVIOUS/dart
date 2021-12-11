@@ -22,9 +22,10 @@ import os
 import shutil
 import re
 import imghdr
-from cStringIO import StringIO
+from io import BytesIO
 import traceback
 import io
+
 
 from django.utils.timezone import localtime, now
 from django.conf import settings
@@ -131,7 +132,7 @@ def generate_report_or_attachments(mission_id, zip_attachments=False):
 
         for p in doc.paragraphs:
             for r in p.runs:
-                for pattern in handlebar_slugs.keys():
+                for pattern in list(handlebar_slugs.keys()):
                     if re.search(pattern, r.text):
                         logger.debug('>> Replaced: {old} With: {new}'.format(
                             old=r.text.encode('utf-8'),
@@ -613,13 +614,13 @@ def generate_report_or_attachments(mission_id, zip_attachments=False):
 
     # Replace document slugs
     replace_document_slugs(document)
-
+    name = mission.mission_name
     if zip_attachments:
         zip_file = shutil.make_archive(mission_data_dir, 'zip', mission_data_dir)
         with open(mission_data_dir + '.zip', 'rb') as f:
-            return io.BytesIO(f.read())
+            return io.BytesIO(f.read()), name
 
     else:
-        my_stream = StringIO()
-        document.save(my_stream)
-        return my_stream
+        stream = BytesIO()
+        document.save(stream)
+        return stream, name
