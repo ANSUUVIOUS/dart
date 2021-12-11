@@ -3,6 +3,8 @@
 DART is a test documentation tool created by the Lockheed Martin Red Team to
 document and report on penetration tests, especially in isolated network environments. 
 
+# This works with python 3.9
+
 The goals of this tool are:
 
 - __Easy__
