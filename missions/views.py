@@ -79,7 +79,7 @@ class ListMissionView(ListView):
     def get_context_data(self, **kwargs):
         logger.debug('GET: ListMissionView')
         context = super(ListMissionView, self).get_context_data(**kwargs)
-        missions = Mission.objects.all()
+        missions = Mission.objects.all().order_by('id')
         paginator = Paginator(missions, 10)
         page = self.request.GET.get('page')
         try:
@@ -452,7 +452,7 @@ class ListMissionTestsSupportingDataView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ListMissionTestsSupportingDataView, self).get_context_data(**kwargs)
-        testdata = self.get_queryset()
+        testdata = self.get_queryset().order_by('id')
         paginator = Paginator(testdata, 10)
         page = self.request.GET.get('page')
         try:
